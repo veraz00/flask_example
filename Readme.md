@@ -45,6 +45,6 @@ sayhello
 ## Need to improve
 How to put error message in form??
 
-## refer
+## Refer
 code: https://github.com/greyli/sayhello <br>
 demo: http://sayhello.helloflask.com/ 
