@@ -1,7 +1,7 @@
 
 ## How to run it 
 ```
-python -m flask run   == python manager.py
+python -m flask run == python manager.py
 python -m flask db init
 python -m flask db migrate -m "Admin" 
 python -m flask db upgrade
