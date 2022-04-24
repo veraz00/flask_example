@@ -7,6 +7,7 @@ login_user, login_required, logout_user)
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 import sys
 sys.path.append('D:/zenglinlin/flask_example/flask_login')  # flask_login include config.py
 from config import config1
@@ -44,7 +45,7 @@ def create_app(config_name): # 'dev'
     #     db.session.add(user)
     #     db.session.commit()
 
-    from .auth import auth as auth_blueprint
+    from .auth import auth as auth_blueprint  # import blueprint at last
     app.register_blueprint(auth_blueprint, url_prefix = '/auth')
 
     return app

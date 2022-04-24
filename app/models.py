@@ -38,7 +38,7 @@ if __name__ == '__main__':  # how to print the username
     
     
     init_db()
-    sqliteConnection = sqlite3.connect('app.db')
+    sqliteConnection = sqlite3.connect('app.db')  # why no accurate path??
     cursor = sqliteConnection.cursor()
     print("Connected to SQLite")
 
