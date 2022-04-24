@@ -1,0 +1,44 @@
+
+{% extends 'base.html' %}
+<!-- messages = Messages, pagination=pagination, form -->
+
+{% import 'bootstrap/wtf.html' as wtf %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+
+
+{% block content %}
+    <div class="hello-form">
+        {{ wtf.quick_form(form) }}
+    </div>
+    {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+    
+    <h5>{{ message.total }} messages 
+        <small class="float-right">
+            <a href="#bottom" title="Go Bottom">&darr;</a>
+        </small>
+    </h5>
+    <div class="list-group">
+        {% for pa in pagination %}
+            <a class="list-group-item list-group-item-action flex-column">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1 text-success">{{ pa.name }}
+                        <small class="text-muted">#{{ pa.id }}</small>
+                    </h5>
+                    <small data-toggle="tooltip" data-placement="top" 
+                        data-timestamp="{{ pa.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}" 
+                        data-delay="500">
+                        {{ pa.timestamp }}  
+                        <!-- moment(pa.timestamp).fromNow(refresh=True) -->
+
+                    </small>
+                </div>
+                <p class="mb-1">{{ pa.message }}</p>
+            </a>
+        {% endfor %}
+        <div class="page_footer">{{ render_pagination(message) }}</div>
+    </div>
+    {% endblock %}
+
+        
