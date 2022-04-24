@@ -1,12 +1,16 @@
+
 ## How to run it 
+```
 python -m flask run   == python manager.py
 python -m flask db init
 python -m flask db migrate -m "Admin" 
 python -m flask db upgrade
 python -m flask init   # call funtion 
 python -m flask forge 
+```
 
 ## Directory structure 
+```
 sayhello
 │  app.db
 │  config.py
@@ -35,9 +39,12 @@ sayhello
 │    └─sayhello
 │        views.py
 │         __init__.py
-│
 └─migrations
-
+```
 
 ## Need to improve
 How to put error message in form??
+
+## refer
+code: https://github.com/greyli/sayhello <br>
+demo: http://sayhello.helloflask.com/ 
