@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}Manage Comments{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Comments
+            <small class="text-muted">{{ pagination.total }}</small>
+        </h1>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Filter</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.args.get('filter', 'all') == 'all' %}active{% endif %}"
+                    href="{{ url_for('admin.manage_comment', filter='all') }}">All</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.args.get('filter') == 'unread' %}active{% endif %}"
+                    href="{{ url_for('admin.manage_comment', filter='unread') }}">Unread 
+                    {% if unread_comments %}
+                    <span class="badge badge-success">{{ unread_comments }}</span>
+                    {% endif %}    
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {% if request.args.get('filter') == 'admin' %}active{% endif %}"
+                    href="{{ url_for('admin.manage_comment', filter='admin') }}">From Admin
+                </a>
+            </li>
+        </ul>
+    </div>
+    {% if comments %}
+        <table class="table table-striped">
+            <thread>
+                <tr>
+                    <th>No.</th>
+                    <th>Author</th>
+                    <th>Body</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thread>
+            {% for comment in comments %}
+                <tr {% if not comment.reviewed %}class="table-warning" {% endif %}>
+                    <!-- 如果评论对象的reviewed字段值为False,将该行评论以橙色背景显示 -->
+                    <td>{{ loop.index + ((pagination.page-1)*config['BLUEBLOG_COMMENT_PER_PAGE']) }}</td>
+                    <td>
+                        {% if comment.from_admin %}{{ admin.name }}{% else %}{{ comment.author }}{% endif %}<br>
+                        {% if comment.site %}
+                            <a href="{{ comment.site }}" target="_blank">
+                                {{ comment.site }}
+                            </a><br>
+                        {% endif %}
+                        <a href="mailto: {{ comment.email }}">{{ comment.email }}</a>
+                        <!-- send email from local to comment.email -->
+                        {% if comment.from_admin %}
+                            <span class="badge badge-primary">Author</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ comment.body }}</td>
+                    <td>{{ moment(comment.timestamp).format('LL') }}</td>
+                    <td>
+                        {% if not comment.reviewed %}
+                            <form class="inline" method="post" action="{{ url_for('admin.approve_comment', comment_id = comment.id, next = request.full_path) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                        {% endif %}
+                        <!-- class="btn btn-info btn-sm"/inline: decide the color of button -->
+                        <a class="btn btn-info btn-sm" href="{{ url_for('blog.show_post', post_id = comment.post.id) }}">Post</a>
+                        <form class="inline" method="post"
+                        action="{{ url_for('admin.delete_comment', comment_id = comment.id, next = request.full_path) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure?');">Delete    
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="page-footer">{{ render_pagination(pagination) }}</div>
+    {% else %}
+        <div class="tip"><h5>No Comments.</h5></div>
+    {% endif %}
+{% endblock %}
